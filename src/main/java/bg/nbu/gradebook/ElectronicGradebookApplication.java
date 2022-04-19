@@ -1,4 +1,4 @@
-package bg.nbu.electronicgradebook;
+package bg.nbu.gradebook;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
