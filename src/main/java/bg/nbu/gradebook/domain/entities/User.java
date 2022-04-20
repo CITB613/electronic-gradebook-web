@@ -7,14 +7,13 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.springframework.security.core.userdetails.UserDetails;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,9 +23,11 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Table(name = "users")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
 public class User extends BaseEntity implements UserDetails {
     private static final long serialVersionUID = -6720418047768269050L;
 
+    @EqualsAndHashCode.Include
     @Column(name = "username", unique = true, nullable = false)
     private String username;
 
@@ -34,7 +35,6 @@ public class User extends BaseEntity implements UserDetails {
     private String password;
 
     @ManyToMany(targetEntity = Role.class, fetch = EAGER)
-    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private Set<Role> authorities = emptySet();
 
     @Override
