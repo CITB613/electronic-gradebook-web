@@ -5,7 +5,6 @@ import org.springframework.stereotype.Repository;
 
 import bg.nbu.gradebook.domain.entities.Role;
 
-
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {
 }
