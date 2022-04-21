@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,5 +20,6 @@ public abstract class BaseEntity {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id")
+    @EqualsAndHashCode.Include
     private long id;
 }
