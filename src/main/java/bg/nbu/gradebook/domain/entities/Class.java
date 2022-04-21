@@ -6,11 +6,13 @@ import static javax.persistence.FetchType.EAGER;
 
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.hibernate.validator.constraints.Range;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,6 +28,12 @@ public class Class extends BaseEntity {
     private Set<Subject> subjects = emptySet();
 
     @OneToMany(cascade = ALL, orphanRemoval = false)
-    @JoinColumn(name = "user_id")
     private Set<User> students = emptySet();
+
+    @Range(min = 1, max = 12)
+    @Column(nullable = false)
+    private int grade;
+
+    @Column(nullable = false)
+    private String group;
 }
