@@ -18,14 +18,14 @@ public class SchoolServiceImpl implements SchoolService {
     private static final String SCHOOL_ALREADY_REGISTED_ERROR_TEMPLATE = "School {} located at {} is already registed";
 
     private final SchoolRepository schoolRepository;
-    private final ModelMapper modelMapper;
     private final UserService userService;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    public SchoolServiceImpl(SchoolRepository schoolRepository, ModelMapper modelMapper, UserService userService) {
+    public SchoolServiceImpl(SchoolRepository schoolRepository, UserService userService, ModelMapper modelMapper) {
         this.schoolRepository = schoolRepository;
-        this.modelMapper = modelMapper;
         this.userService = userService;
+        this.modelMapper = modelMapper;
     }
 
     @Override
