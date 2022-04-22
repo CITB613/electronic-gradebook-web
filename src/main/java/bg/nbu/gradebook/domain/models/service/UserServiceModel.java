@@ -1,5 +1,6 @@
 package bg.nbu.gradebook.domain.models.service;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,6 +23,17 @@ public class UserServiceModel extends BaseServiceModel {
 
     @NotNull
     private String password;
+
+    @NotEmpty
+    @NotNull
+    private String firstName;
+
+    @NotEmpty
+    @NotNull
+    private String lastName;
+
+    @NotNull
+    private LocalDate birthDate;
 
     private Set<RoleServiceModel> authorities = new HashSet<>();
 }
