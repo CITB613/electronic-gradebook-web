@@ -1,5 +1,7 @@
 package bg.nbu.gradebook.services.users;
 
+import static bg.nbu.gradebook.commons.constants.Roles.ROLE_PRINCIPAL;
+import static java.util.Collections.singleton;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
@@ -13,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import bg.nbu.gradebook.domain.entities.User;
+import bg.nbu.gradebook.domain.models.service.RoleServiceModel;
 import bg.nbu.gradebook.domain.models.service.UserServiceModel;
 import bg.nbu.gradebook.repositories.UserRepository;
 import bg.nbu.gradebook.services.roles.RoleService;
@@ -43,13 +46,26 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<UserServiceModel> findByUsername(String username) {
-        final Optional<User> user = userRepository.findByUsername(username);
+        return mapToUserServiceModel(userRepository.findByUsername(username));
+    }
 
-        return user.isPresent() ? of(modelMapper.map(user.get(), UserServiceModel.class)) : empty();
+    @Override
+    public Optional<UserServiceModel> findById(long id) {
+        return mapToUserServiceModel(userRepository.findById(id));
     }
 
     @Override
     public void delete(long id) {
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public void promoteToPrincipal(UserServiceModel userServiceModel) {
+        userServiceModel.setAuthorities(singleton(new RoleServiceModel(ROLE_PRINCIPAL.getRole())));
+        userRepository.saveAndFlush(modelMapper.map(userServiceModel, User.class));
+    }
+
+    private Optional<UserServiceModel> mapToUserServiceModel(final Optional<User> user) {
+        return user.isPresent() ? of(modelMapper.map(user.get(), UserServiceModel.class)) : empty();
     }
 }

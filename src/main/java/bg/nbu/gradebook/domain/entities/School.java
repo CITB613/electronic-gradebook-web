@@ -27,8 +27,8 @@ public class School extends BaseEntity {
     @Column(name = "address", unique = true, nullable = false)
     private String address;
 
-    @Column(name = "director", unique = true, nullable = false)
-    private User director;
+    @Column(name = "principal", unique = true, nullable = false)
+    private User principal;
 
     @OneToMany(cascade = ALL, orphanRemoval = true)
     private List<Class> classes = new ArrayList<>();

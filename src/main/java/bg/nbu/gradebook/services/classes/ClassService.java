@@ -1,10 +1,7 @@
 package bg.nbu.gradebook.services.classes;
 
-import bg.nbu.gradebook.domain.models.service.ClassServiceModel;
-import bg.nbu.gradebook.domain.models.service.UserServiceModel;
-
 public interface ClassService {
-    void enrollStudentInClass(UserServiceModel userServiceModel, ClassServiceModel classServiceModel);
+    void enrollStudentInClass(long studentId, long classId);
 
-    void unenrollStudentFromClass(UserServiceModel userServiceModel, ClassServiceModel classServiceModel);
+    void unenrollStudentFromClass(long studentId, long classId);
 }
