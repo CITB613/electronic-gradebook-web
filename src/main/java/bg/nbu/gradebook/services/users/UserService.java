@@ -11,8 +11,8 @@ public interface UserService extends UserDetailsService {
     Optional<UserServiceModel> findByUsername(String username);
 
     Optional<User> findById(long id);
-    
-    void promoteToPrincipal(UserServiceModel userServiceModel);
+
+    void promoteToPrincipal(User user);
 
     void delete(long id);
 }

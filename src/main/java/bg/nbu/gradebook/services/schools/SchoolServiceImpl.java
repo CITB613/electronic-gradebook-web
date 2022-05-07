@@ -47,11 +47,11 @@ public class SchoolServiceImpl implements SchoolService {
     public void setPrincipal(long schoolId, long userId) {
         final School school = schoolRepository.findById(schoolId)
                 .orElseThrow();
-        final UserServiceModel userServiceModel = userService.findById(userId)
+        final User user = userService.findById(userId)
                 .orElseThrow();
 
-        userService.promoteToPrincipal(userServiceModel);
-        school.setPrincipal(modelMapper.map(userServiceModel, User.class));
+        userService.promoteToPrincipal(user);
+        school.setPrincipal(modelMapper.map(user, User.class));
         schoolRepository.saveAndFlush(school);
     }
 }

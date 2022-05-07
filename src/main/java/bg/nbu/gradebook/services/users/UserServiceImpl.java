@@ -7,6 +7,7 @@ import static java.util.Optional.of;
 
 import java.util.Optional;
 
+import bg.nbu.gradebook.domain.entities.Role;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -60,9 +61,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void promoteToPrincipal(UserServiceModel userServiceModel) {
-        userServiceModel.setAuthorities(singleton(new RoleServiceModel(ROLE_PRINCIPAL.getRole())));
-        userRepository.saveAndFlush(modelMapper.map(userServiceModel, User.class));
+    public void promoteToPrincipal(User user) {
+        user.setAuthorities(singleton(new Role(ROLE_PRINCIPAL.getRole())));
+        userRepository.saveAndFlush(modelMapper.map(user, User.class));
     }
 
     private Optional<UserServiceModel> mapToUserServiceModel(final Optional<User> user) {
