@@ -1,15 +1,15 @@
 package bg.nbu.gradebook.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import bg.nbu.gradebook.services.classes.ClassService;
 
-@Controller
+@RestController
 @RequestMapping("classes")
 public class ClassController {
     private final ClassService classService;
@@ -19,7 +19,7 @@ public class ClassController {
         this.classService = classService;
     }
 
-    @PostMapping("/{classId}/student/{studentId}")
+    @PostMapping("/{classId}/enroll/{studentId}")
     public void enrollStudent(@PathVariable long classId, @PathVariable long studentId) {
         classService.enrollStudentInClass(studentId, classId);
     }

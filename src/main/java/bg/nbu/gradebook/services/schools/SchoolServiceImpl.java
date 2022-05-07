@@ -1,5 +1,7 @@
 package bg.nbu.gradebook.services.schools;
 
+import java.util.Optional;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,12 +31,16 @@ public class SchoolServiceImpl implements SchoolService {
     }
 
     @Override
-    public void registerSchool(SchoolServiceModel schoolServiceModel) {
-        schoolRepository.findByName(schoolServiceModel.getName())
-                .ifPresentOrElse(
-                        school -> log.error(SCHOOL_ALREADY_REGISTED_ERROR_TEMPLATE, school.getName(),
-                                school.getAddress()),
-                        () -> schoolRepository.saveAndFlush(modelMapper.map(schoolServiceModel, School.class)));
+    public School registerSchool(SchoolServiceModel schoolServiceModel) {
+        final Optional<School> school = schoolRepository.findByName(schoolServiceModel.getName());
+        if (school.isEmpty()) {
+            log.error(SCHOOL_ALREADY_REGISTED_ERROR_TEMPLATE, schoolServiceModel.getName(),
+                    schoolServiceModel.getAddress());
+
+            throw new IllegalArgumentException();
+        }
+
+        return schoolRepository.saveAndFlush(modelMapper.map(schoolServiceModel, School.class));
     }
 
     @Override

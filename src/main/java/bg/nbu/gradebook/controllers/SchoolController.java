@@ -4,15 +4,16 @@ import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import bg.nbu.gradebook.domain.entities.School;
 import bg.nbu.gradebook.domain.models.bindings.SchoolBindingModel;
 import bg.nbu.gradebook.domain.models.service.SchoolServiceModel;
 import bg.nbu.gradebook.services.schools.SchoolService;
 
-@Controller
+@RestController
 @RequestMapping("schools")
 public class SchoolController {
     private final SchoolService schoolService;
@@ -25,7 +26,10 @@ public class SchoolController {
     }
 
     @PostMapping
-    public void registerSchool(@Valid SchoolBindingModel schoolBindingModel) {
-        schoolService.registerSchool(modelMapper.map(schoolBindingModel, SchoolServiceModel.class));
+    public SchoolBindingModel registerSchool(@Valid SchoolBindingModel schoolBindingModel) {
+        final School registerdSchool = schoolService
+                .registerSchool(modelMapper.map(schoolBindingModel, SchoolServiceModel.class));
+
+        return modelMapper.map(registerdSchool, SchoolBindingModel.class);
     }
 }

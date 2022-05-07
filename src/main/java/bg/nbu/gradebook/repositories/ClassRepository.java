@@ -9,5 +9,5 @@ import bg.nbu.gradebook.domain.entities.Class;
 
 @Repository
 public interface ClassRepository extends JpaRepository<Class, Long> {
-    Optional<Class> findByIdGradeAndGroup(int grade, String group);
+    Optional<Class> findByGradeAndGroup(int grade, String group);
 }

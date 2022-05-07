@@ -1,4 +1,4 @@
-package bg.nbu.gradebook.commons.constants;
+package bg.nbu.gradebook.domain.entities;
 
 public enum Roles {
     ROLE_ADMIN("ROLE_ADMIN"), ROLE_PRINCIPAL("ROLE_PRINCIPAL"), ROLE_TEACHER("ROLE_TEACHER"),

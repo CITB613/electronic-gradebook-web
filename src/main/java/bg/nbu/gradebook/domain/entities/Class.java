@@ -24,7 +24,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Table(name = "classes")
 public class Class extends BaseEntity {
-    @ManyToMany(targetEntity = Subject.class, fetch = EAGER)
+    @ManyToMany(fetch = EAGER)
     private Set<Subject> subjects = emptySet();
 
     @OneToMany(cascade = ALL, orphanRemoval = false)
@@ -34,6 +34,6 @@ public class Class extends BaseEntity {
     @Column(nullable = false)
     private int grade;
 
-    @Column(nullable = false)
+    @Column(name="gradeId",nullable = false)
     private String group;
 }

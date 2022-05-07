@@ -22,4 +22,18 @@ public class Role extends BaseEntity implements GrantedAuthority {
 
     @Column(name = "authority", nullable = false)
     private String authority;
+
+    public String getAuthority() {
+        return authority;
+    }
+
+    public void setAuthority(String authority) {
+        this.authority = authority;
+    }
+
+    public static long getSerialversionuid() {
+        return serialVersionUID;
+    }
+    
+    
 }

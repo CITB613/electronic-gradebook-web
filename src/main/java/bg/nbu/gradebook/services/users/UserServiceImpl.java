@@ -1,6 +1,6 @@
 package bg.nbu.gradebook.services.users;
 
-import static bg.nbu.gradebook.commons.constants.Roles.ROLE_PRINCIPAL;
+import static bg.nbu.gradebook.domain.entities.Roles.ROLE_PRINCIPAL;
 import static java.util.Collections.singleton;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
@@ -50,8 +50,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<UserServiceModel> findById(long id) {
-        return mapToUserServiceModel(userRepository.findById(id));
+    public Optional<User> findById(long id) {
+        return userRepository.findById(id);
     }
 
     @Override

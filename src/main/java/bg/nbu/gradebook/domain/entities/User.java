@@ -25,7 +25,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Table(name = "users")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
-public class User extends BaseEntity implements UserDetails {
+public class User extends BaseEntity  implements UserDetails {
     private static final long serialVersionUID = -6720418047768269050L;
 
     @EqualsAndHashCode.Include
@@ -75,4 +75,58 @@ public class User extends BaseEntity implements UserDetails {
     public String toString() {
         return username;
     }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Set<Role> getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(Set<Role> authorities) {
+        this.authorities = authorities;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public static long getSerialversionuid() {
+        return serialVersionUID;
+    }
+    
+    
 }
