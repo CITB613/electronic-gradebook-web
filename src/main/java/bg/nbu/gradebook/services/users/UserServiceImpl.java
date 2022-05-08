@@ -4,10 +4,10 @@ import static bg.nbu.gradebook.domain.entities.Roles.ROLE_PRINCIPAL;
 import static java.util.Collections.singleton;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import java.util.Optional;
 
-import bg.nbu.gradebook.domain.entities.Role;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,8 +15,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import bg.nbu.gradebook.domain.entities.Role;
 import bg.nbu.gradebook.domain.entities.User;
-import bg.nbu.gradebook.domain.models.service.RoleServiceModel;
 import bg.nbu.gradebook.domain.models.service.UserServiceModel;
 import bg.nbu.gradebook.repositories.UserRepository;
 import bg.nbu.gradebook.services.roles.RoleService;
@@ -64,6 +64,26 @@ public class UserServiceImpl implements UserService {
     public void promoteToPrincipal(User user) {
         user.setAuthorities(singleton(new Role(ROLE_PRINCIPAL.getRole())));
         userRepository.saveAndFlush(modelMapper.map(user, User.class));
+    }
+
+    @Override
+    public User update(long userId, User userModel) {
+        final User user = userRepository.findById(userId)
+                .orElseThrow();
+
+        if (isNotBlank(userModel.getFirstName())) {
+            user.setFirstName(userModel.getFirstName());
+        }
+
+        if (isNotBlank(userModel.getLastName())) {
+            user.setLastName(userModel.getLastName());
+        }
+
+        if (userModel.getBirthDate() != null) {
+            user.setBirthDate(userModel.getBirthDate());
+        }
+
+        return userRepository.save(userModel);
     }
 
     private Optional<UserServiceModel> mapToUserServiceModel(final Optional<User> user) {

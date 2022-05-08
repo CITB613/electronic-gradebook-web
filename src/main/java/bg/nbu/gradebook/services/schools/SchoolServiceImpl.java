@@ -1,5 +1,6 @@
 package bg.nbu.gradebook.services.schools;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
@@ -9,7 +10,6 @@ import org.springframework.stereotype.Service;
 import bg.nbu.gradebook.domain.entities.School;
 import bg.nbu.gradebook.domain.entities.User;
 import bg.nbu.gradebook.domain.models.service.SchoolServiceModel;
-import bg.nbu.gradebook.domain.models.service.UserServiceModel;
 import bg.nbu.gradebook.repositories.SchoolRepository;
 import bg.nbu.gradebook.services.users.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -53,5 +53,10 @@ public class SchoolServiceImpl implements SchoolService {
         userService.promoteToPrincipal(user);
         school.setPrincipal(modelMapper.map(user, User.class));
         schoolRepository.saveAndFlush(school);
+    }
+
+    @Override
+    public List<School> findAll() {
+        return schoolRepository.findAll();
     }
 }

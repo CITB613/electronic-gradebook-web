@@ -15,4 +15,6 @@ public interface UserService extends UserDetailsService {
     void promoteToPrincipal(User user);
 
     void delete(long id);
+
+    User update(long userId, User user);
 }
