@@ -1,5 +1,6 @@
 package bg.nbu.gradebook.services.users;
 
+import bg.nbu.gradebook.commons.utils.Mapper;
 import bg.nbu.gradebook.domain.entities.Role;
 import bg.nbu.gradebook.domain.entities.User;
 import bg.nbu.gradebook.domain.models.bindings.CreateUserBindingModel;
@@ -21,18 +22,18 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final ModelMapper modelMapper;
+    private final Mapper modelMapper;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, Mapper modelMapper, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.passwordEncoder = passwordEncoder;
     }
 
     @Override
-    public UserServiceModel register(CreateUserBindingModel userData) {
+    public void register(CreateUserBindingModel userData) {
         if (userRepository.findByUsername(userData.getUsername()).isPresent()) {
             throw new ValidationException("Username exists!");
         }
@@ -40,9 +41,7 @@ public class UserServiceImpl implements UserService {
         User user = this.modelMapper.map(userData, User.class);
         user.setPassword(passwordEncoder.encode(userData.getPassword()));
 
-        user = userRepository.save(user);
-
-        return this.mapToUserServiceModel(user);
+        userRepository.save(user);
     }
 
     @Override
@@ -85,7 +84,7 @@ public class UserServiceImpl implements UserService {
 
         return userRepository.save(userModel);
     }
-    
+
     public UserServiceModel mapToUserServiceModel(final User user) {
         return modelMapper.map(user, UserServiceModel.class);
     }

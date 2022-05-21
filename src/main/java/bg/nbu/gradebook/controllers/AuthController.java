@@ -76,8 +76,8 @@ public class AuthController {
     }
 
     @PostMapping("api/register")
-    public UserServiceModel register(@RequestBody @Valid CreateUserBindingModel request) {
-        return userService.register(request);
+    public void register(@RequestBody @Valid CreateUserBindingModel request) {
+        userService.register(request);
     }
 
 }

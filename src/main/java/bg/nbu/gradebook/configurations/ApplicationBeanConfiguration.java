@@ -10,13 +10,11 @@ import bg.nbu.gradebook.commons.utils.Mapper;
 
 @Configuration
 public class ApplicationBeanConfiguration {
-    @Bean
-    public ModelMapper createModelMapper() {
-        return new ModelMapper();
-    }
 
     @Bean
-    public Mapper mapper(ModelMapper modelMapper) {
+    public Mapper mapper() {
+        ModelMapper modelMapper = new ModelMapper();
+
         return new Mapper(modelMapper);
     }
 

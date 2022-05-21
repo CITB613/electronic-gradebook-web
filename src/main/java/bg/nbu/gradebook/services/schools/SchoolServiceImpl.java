@@ -3,6 +3,7 @@ package bg.nbu.gradebook.services.schools;
 import java.util.List;
 import java.util.Optional;
 
+import bg.nbu.gradebook.commons.utils.Mapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,10 +22,10 @@ public class SchoolServiceImpl implements SchoolService {
 
     private final SchoolRepository schoolRepository;
     private final UserService userService;
-    private final ModelMapper modelMapper;
+    private final Mapper modelMapper;
 
     @Autowired
-    public SchoolServiceImpl(SchoolRepository schoolRepository, UserService userService, ModelMapper modelMapper) {
+    public SchoolServiceImpl(SchoolRepository schoolRepository, UserService userService, Mapper modelMapper) {
         this.schoolRepository = schoolRepository;
         this.userService = userService;
         this.modelMapper = modelMapper;

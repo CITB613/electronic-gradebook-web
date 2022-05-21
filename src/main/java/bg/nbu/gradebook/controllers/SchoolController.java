@@ -18,6 +18,8 @@ import bg.nbu.gradebook.domain.models.bindings.SchoolBindingModel;
 import bg.nbu.gradebook.domain.models.service.SchoolServiceModel;
 import bg.nbu.gradebook.services.schools.SchoolService;
 
+// FIXME Route permissions by role
+
 @RestController
 @RequestMapping("schools")
 public class SchoolController {
@@ -55,7 +57,7 @@ public class SchoolController {
                 .filter(currentSchool -> currentSchool.getId() == schoolId)
                 .findFirst()
                 .orElseThrow();
-        
+
         return school.getClasses();
     }
 }

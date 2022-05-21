@@ -6,11 +6,7 @@ import static javax.persistence.FetchType.EAGER;
 import java.time.LocalDate;
 import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -127,6 +123,6 @@ public class User extends BaseEntity  implements UserDetails {
     public static long getSerialversionuid() {
         return serialVersionUID;
     }
-    
-    
+
+
 }

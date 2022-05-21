@@ -1,5 +1,9 @@
 package bg.nbu.gradebook.services.classes;
 
+import bg.nbu.gradebook.commons.utils.Mapper;
+import bg.nbu.gradebook.domain.models.bindings.ClassBindingModel;
+import bg.nbu.gradebook.domain.models.service.ClassServiceModel;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,11 +16,13 @@ import bg.nbu.gradebook.services.users.UserService;
 public class ClassServiceImpl implements ClassService {
     private final UserService userService;
     private final ClassRepository classRepository;
+    private Mapper modelMapper;
 
     @Autowired
-    public ClassServiceImpl(UserService userService, ClassRepository classRepository) {
+    public ClassServiceImpl(UserService userService, ClassRepository classRepository, Mapper modelMapper) {
         this.userService = userService;
         this.classRepository = classRepository;
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -43,5 +49,14 @@ public class ClassServiceImpl implements ClassService {
                 .remove(user);
 
         classRepository.save(schoolClass);
+    }
+
+    @Override
+    public ClassServiceModel create(ClassBindingModel classData) {
+        Class c = modelMapper.map(classData, Class.class);
+
+        c = classRepository.save(c);
+
+        return modelMapper.map(c, ClassServiceModel.class);
     }
 }

@@ -30,6 +30,5 @@ public class CreateUserBindingModel {
     private String lastName;
 
     @NotNull
-    @NotEmpty
     private LocalDate birthDate;
 }

@@ -9,7 +9,7 @@ import bg.nbu.gradebook.domain.entities.User;
 import bg.nbu.gradebook.domain.models.service.UserServiceModel;
 
 public interface UserService {
-    UserServiceModel register(CreateUserBindingModel userData);
+    void register(CreateUserBindingModel userData);
 
     Optional<User> findByUsername(String username);
 
