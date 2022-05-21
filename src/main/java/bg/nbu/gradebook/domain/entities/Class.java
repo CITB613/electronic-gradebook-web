@@ -34,6 +34,6 @@ public class Class extends BaseEntity {
     @Column(nullable = false)
     private int grade;
 
-    @Column(name="gradeId",nullable = false)
+    @Column(name = "gradeId", nullable = false)
     private String group;
 }

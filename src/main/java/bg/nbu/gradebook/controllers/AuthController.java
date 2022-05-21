@@ -42,7 +42,7 @@ public class AuthController {
         this.userService = userService;
     }
 
-    @PostMapping("api/login")
+    @PostMapping("/login")
     public ResponseEntity<UserServiceModel> login(@RequestBody @Valid UserPasswordBindingModel request) {
         try {
             Authentication authentication = authenticationManager
@@ -75,7 +75,7 @@ public class AuthController {
         }
     }
 
-    @PostMapping("api/register")
+    @PostMapping("/register")
     public void register(@RequestBody @Valid CreateUserBindingModel request) {
         userService.register(request);
     }
