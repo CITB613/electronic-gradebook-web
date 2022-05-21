@@ -1,53 +1,53 @@
 package bg.nbu.gradebook.services.users;
 
-import static bg.nbu.gradebook.domain.entities.Roles.ROLE_PRINCIPAL;
-import static java.util.Collections.singleton;
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-
-import java.util.Optional;
-
+import bg.nbu.gradebook.domain.entities.Role;
+import bg.nbu.gradebook.domain.entities.User;
+import bg.nbu.gradebook.domain.models.bindings.CreateUserBindingModel;
+import bg.nbu.gradebook.domain.models.service.UserServiceModel;
+import bg.nbu.gradebook.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import bg.nbu.gradebook.domain.entities.Role;
-import bg.nbu.gradebook.domain.entities.User;
-import bg.nbu.gradebook.domain.models.service.UserServiceModel;
-import bg.nbu.gradebook.repositories.UserRepository;
-import bg.nbu.gradebook.services.roles.RoleService;
+import javax.validation.ValidationException;
+import java.util.Optional;
+
+import static bg.nbu.gradebook.domain.entities.Roles.ROLE_PRINCIPAL;
+import static java.util.Collections.singleton;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @Service
 public class UserServiceImpl implements UserService {
-    public static final String UNABLE_TO_FIND_USER_BY_NAME_MESSAGE = "Unable to find user by name.";
 
     private final UserRepository userRepository;
-    private final RoleService roleService;
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, RoleService roleService, ModelMapper modelMapper,
-            PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-        this.roleService = roleService;
         this.modelMapper = modelMapper;
         this.passwordEncoder = passwordEncoder;
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(UNABLE_TO_FIND_USER_BY_NAME_MESSAGE));
+    public UserServiceModel register(CreateUserBindingModel userData) {
+        if (userRepository.findByUsername(userData.getUsername()).isPresent()) {
+            throw new ValidationException("Username exists!");
+        }
+
+        User user = this.modelMapper.map(userData, User.class);
+        user.setPassword(passwordEncoder.encode(userData.getPassword()));
+
+        user = userRepository.save(user);
+
+        return this.mapToUserServiceModel(user);
     }
 
     @Override
-    public Optional<UserServiceModel> findByUsername(String username) {
-        return mapToUserServiceModel(userRepository.findByUsername(username));
+    public Optional<User> findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 
     @Override
@@ -85,8 +85,8 @@ public class UserServiceImpl implements UserService {
 
         return userRepository.save(userModel);
     }
-
-    private Optional<UserServiceModel> mapToUserServiceModel(final Optional<User> user) {
-        return user.isPresent() ? of(modelMapper.map(user.get(), UserServiceModel.class)) : empty();
+    
+    public UserServiceModel mapToUserServiceModel(final User user) {
+        return modelMapper.map(user, UserServiceModel.class);
     }
 }

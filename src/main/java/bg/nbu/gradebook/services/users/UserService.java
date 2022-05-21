@@ -2,13 +2,16 @@ package bg.nbu.gradebook.services.users;
 
 import java.util.Optional;
 
+import bg.nbu.gradebook.domain.models.bindings.CreateUserBindingModel;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import bg.nbu.gradebook.domain.entities.User;
 import bg.nbu.gradebook.domain.models.service.UserServiceModel;
 
-public interface UserService extends UserDetailsService {
-    Optional<UserServiceModel> findByUsername(String username);
+public interface UserService {
+    UserServiceModel register(CreateUserBindingModel userData);
+
+    Optional<User> findByUsername(String username);
 
     Optional<User> findById(long id);
 
@@ -17,4 +20,6 @@ public interface UserService extends UserDetailsService {
     void delete(long id);
 
     User update(long userId, User user);
+
+    UserServiceModel mapToUserServiceModel(User user);
 }
