@@ -1,22 +1,25 @@
 package bg.nbu.gradebook.services.users;
 
-import bg.nbu.gradebook.commons.utils.Mapper;
-import bg.nbu.gradebook.domain.entities.Role;
-import bg.nbu.gradebook.domain.entities.User;
-import bg.nbu.gradebook.domain.models.bindings.CreateUserBindingModel;
-import bg.nbu.gradebook.domain.models.service.UserServiceModel;
-import bg.nbu.gradebook.repositories.UserRepository;
-import org.modelmapper.ModelMapper;
+import static bg.nbu.gradebook.domain.entities.Roles.ROLE_PRINCIPAL;
+import static java.util.Collections.singleton;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
+import java.util.Optional;
+
+import javax.validation.ValidationException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.validation.ValidationException;
-import java.util.Optional;
-
-import static bg.nbu.gradebook.domain.entities.Roles.ROLE_PRINCIPAL;
-import static java.util.Collections.singleton;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import bg.nbu.gradebook.commons.utils.Mapper;
+import bg.nbu.gradebook.domain.entities.Role;
+import bg.nbu.gradebook.domain.entities.Roles;
+import bg.nbu.gradebook.domain.entities.User;
+import bg.nbu.gradebook.domain.models.bindings.CreateUserBindingModel;
+import bg.nbu.gradebook.domain.models.service.UserServiceModel;
+import bg.nbu.gradebook.repositories.UserRepository;
+import bg.nbu.gradebook.services.roles.RoleService;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -24,24 +27,28 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final Mapper modelMapper;
     private final PasswordEncoder passwordEncoder;
+    private final RoleService roleService;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, Mapper modelMapper, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, Mapper modelMapper, PasswordEncoder passwordEncoder,
+            RoleService roleService) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.passwordEncoder = passwordEncoder;
+        this.roleService = roleService;
     }
 
     @Override
-    public void register(CreateUserBindingModel userData) {
-        if (userRepository.findByUsername(userData.getUsername()).isPresent()) {
+    public UserServiceModel register(CreateUserBindingModel userData) {
+        if (userRepository.findByUsername(userData.getUsername())
+                .isPresent()) {
             throw new ValidationException("Username exists!");
         }
 
         User user = this.modelMapper.map(userData, User.class);
         user.setPassword(passwordEncoder.encode(userData.getPassword()));
 
-        userRepository.save(user);
+        return modelMapper.map(userRepository.save(user), UserServiceModel.class);
     }
 
     @Override
@@ -87,5 +94,14 @@ public class UserServiceImpl implements UserService {
 
     public UserServiceModel mapToUserServiceModel(final User user) {
         return modelMapper.map(user, UserServiceModel.class);
+    }
+
+    @Override
+    public void setRole(UserServiceModel userServiceModel, Roles role) {
+        final User user = modelMapper.map(userServiceModel, User.class);
+        final Role authority = modelMapper.map(roleService.findByAuthority(role.getRole()), Role.class);
+        user.setAuthorities(singleton(authority));
+
+        userRepository.save(user);
     }
 }

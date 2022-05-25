@@ -4,10 +4,9 @@ import static java.util.stream.Collectors.toUnmodifiableSet;
 
 import java.util.Set;
 
-import bg.nbu.gradebook.commons.utils.Mapper;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import bg.nbu.gradebook.commons.utils.Mapper;
 import bg.nbu.gradebook.domain.models.service.RoleServiceModel;
 import bg.nbu.gradebook.repositories.RoleRepository;
 
@@ -27,5 +26,14 @@ public class RoleServiceImpl implements RoleService {
                 .stream()
                 .map(role -> modelMapper.map(role, RoleServiceModel.class))
                 .collect(toUnmodifiableSet());
+    }
+
+    @Override
+    public RoleServiceModel findByAuthority(String authority) {
+        return findAllRoles().stream()
+                .filter(role -> role.getAuthority()
+                        .equalsIgnoreCase(authority))
+                .findAny()
+                .orElseThrow();
     }
 }

@@ -1,10 +1,12 @@
 package bg.nbu.gradebook.controllers;
 
-import bg.nbu.gradebook.domain.entities.User;
-import bg.nbu.gradebook.domain.models.bindings.CreateUserBindingModel;
-import bg.nbu.gradebook.domain.models.bindings.UserPasswordBindingModel;
-import bg.nbu.gradebook.domain.models.service.UserServiceModel;
-import bg.nbu.gradebook.services.users.UserService;
+import static java.lang.String.format;
+import static java.util.stream.Collectors.joining;
+
+import java.time.Instant;
+
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -17,15 +19,16 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import java.time.Instant;
-
-import static java.lang.String.format;
-import static java.util.stream.Collectors.joining;
+import bg.nbu.gradebook.domain.entities.User;
+import bg.nbu.gradebook.domain.models.bindings.CreateUserBindingModel;
+import bg.nbu.gradebook.domain.models.bindings.UserPasswordBindingModel;
+import bg.nbu.gradebook.domain.models.service.UserServiceModel;
+import bg.nbu.gradebook.services.users.UserService;
 
 @RestController
 public class AuthController {
@@ -42,7 +45,7 @@ public class AuthController {
         this.userService = userService;
     }
 
-    @PostMapping("/login")
+    @PostMapping("api/login")
     public ResponseEntity<UserServiceModel> login(@RequestBody @Valid UserPasswordBindingModel request) {
         try {
             Authentication authentication = authenticationManager
@@ -75,7 +78,7 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/register")
+    @PostMapping("api/register")
     public void register(@RequestBody @Valid CreateUserBindingModel request) {
         userService.register(request);
     }
