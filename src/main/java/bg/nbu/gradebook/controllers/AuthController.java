@@ -4,6 +4,7 @@ import static java.lang.String.format;
 import static java.util.stream.Collectors.joining;
 
 import java.time.Instant;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -46,7 +47,7 @@ public class AuthController {
     }
 
     @PostMapping("api/login")
-    public ResponseEntity<UserServiceModel> login(@RequestBody @Valid UserPasswordBindingModel request) {
+    public ResponseEntity<Map<String, String>> login(@RequestBody @Valid UserPasswordBindingModel request) {
         try {
             Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
@@ -71,8 +72,7 @@ public class AuthController {
             String token = this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
 
             return ResponseEntity.ok()
-                    .header(HttpHeaders.AUTHORIZATION, token)
-                    .body(userService.mapToUserServiceModel(user));
+                    .body(Map.of("AccessToken", token));
         } catch (BadCredentialsException ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
