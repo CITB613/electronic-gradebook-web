@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,7 +17,6 @@ import bg.nbu.gradebook.commons.utils.Mapper;
 import bg.nbu.gradebook.domain.entities.Class;
 import bg.nbu.gradebook.domain.entities.School;
 import bg.nbu.gradebook.domain.models.bindings.SchoolBindingModel;
-import bg.nbu.gradebook.domain.models.service.SchoolServiceModel;
 import bg.nbu.gradebook.services.schools.SchoolService;
 
 // FIXME Route permissions by role
@@ -33,9 +34,8 @@ public class SchoolController {
     }
 
     @PostMapping
-    public SchoolBindingModel registerSchool(@Valid SchoolBindingModel schoolBindingModel) {
-        final School registerdSchool = schoolService
-                .registerSchool(mapper.map(schoolBindingModel, SchoolServiceModel.class));
+    public SchoolBindingModel registerSchool(@RequestBody @Valid SchoolBindingModel schoolBindingModel) {
+        final School registerdSchool = schoolService.registerSchool(schoolBindingModel);
 
         return mapper.map(registerdSchool, SchoolBindingModel.class);
     }
@@ -60,4 +60,10 @@ public class SchoolController {
 
         return school.getClasses();
     }
+
+    @PutMapping("/{schoolId}")
+    public void updateSchool(@PathVariable long schoolId, @RequestBody @Valid SchoolBindingModel schoolBindingModel) {
+        schoolService.update(schoolId, schoolBindingModel);
+    }
+
 }

@@ -2,8 +2,11 @@ package bg.nbu.gradebook.services.users;
 
 import static bg.nbu.gradebook.domain.entities.Roles.ROLE_PRINCIPAL;
 import static java.util.Collections.singleton;
+import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Collectors.toUnmodifiableList;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.validation.ValidationException;
@@ -23,7 +26,6 @@ import bg.nbu.gradebook.services.roles.RoleService;
 
 @Service
 public class UserServiceImpl implements UserService {
-
     private final UserRepository userRepository;
     private final Mapper modelMapper;
     private final PasswordEncoder passwordEncoder;
@@ -103,5 +105,21 @@ public class UserServiceImpl implements UserService {
         user.setAuthorities(singleton(authority));
 
         userRepository.save(user);
+    }
+
+    @Override
+    public List<User> findAllPrincipals() {
+        return userRepository.findAll()
+                .stream()
+                .filter(this::filterByPrincipalRole)
+                .collect(toUnmodifiableList());
+    }
+
+    private boolean filterByPrincipalRole(User user) {
+        return user.getAuthorities()
+                .stream()
+                .map(Role::getAuthority)
+                .collect(toSet())
+                .contains(ROLE_PRINCIPAL.toString());
     }
 }

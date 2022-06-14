@@ -1,5 +1,6 @@
 package bg.nbu.gradebook.services.users;
 
+import java.util.List;
 import java.util.Optional;
 
 import bg.nbu.gradebook.domain.entities.Roles;
@@ -23,4 +24,6 @@ public interface UserService {
     UserServiceModel mapToUserServiceModel(User user);
 
     void setRole(UserServiceModel userServiceModel, Roles admin);
+
+    List<User> findAllPrincipals();
 }

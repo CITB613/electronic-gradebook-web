@@ -3,14 +3,13 @@ package bg.nbu.gradebook.services.schools;
 import java.util.List;
 import java.util.Optional;
 
-import bg.nbu.gradebook.commons.utils.Mapper;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import bg.nbu.gradebook.commons.utils.Mapper;
 import bg.nbu.gradebook.domain.entities.School;
 import bg.nbu.gradebook.domain.entities.User;
-import bg.nbu.gradebook.domain.models.service.SchoolServiceModel;
+import bg.nbu.gradebook.domain.models.bindings.SchoolBindingModel;
 import bg.nbu.gradebook.repositories.SchoolRepository;
 import bg.nbu.gradebook.services.users.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -32,16 +31,19 @@ public class SchoolServiceImpl implements SchoolService {
     }
 
     @Override
-    public School registerSchool(SchoolServiceModel schoolServiceModel) {
-        final Optional<School> school = schoolRepository.findByName(schoolServiceModel.getName());
-        if (school.isEmpty()) {
-            log.error(SCHOOL_ALREADY_REGISTED_ERROR_TEMPLATE, schoolServiceModel.getName(),
-                    schoolServiceModel.getAddress());
+    public School registerSchool(SchoolBindingModel schoolBindingModel) {
+        final Optional<School> existingSchool = schoolRepository.findByName(schoolBindingModel.getName());
+        if (existingSchool.isPresent()) {
+            log.error(SCHOOL_ALREADY_REGISTED_ERROR_TEMPLATE, schoolBindingModel.getName(),
+                    schoolBindingModel.getAddress());
 
             throw new IllegalArgumentException();
         }
 
-        return schoolRepository.saveAndFlush(modelMapper.map(schoolServiceModel, School.class));
+        final User principal = userService.findById(schoolBindingModel.getPrincipalId()).orElseThrow();
+        School school = modelMapper.map(schoolBindingModel, School.class);
+        school.setPrincipal(principal);
+        return schoolRepository.save(school);
     }
 
     @Override
@@ -59,5 +61,15 @@ public class SchoolServiceImpl implements SchoolService {
     @Override
     public List<School> findAll() {
         return schoolRepository.findAll();
+    }
+
+    @Override
+    public void update(long schoolId, SchoolBindingModel schoolBindingModel) {
+        final School school = schoolRepository.findById(schoolId)
+                .orElseThrow();
+        school.setAddress(schoolBindingModel.getAddress());
+        school.setName(schoolBindingModel.getName());
+
+        schoolRepository.save(school);
     }
 }
