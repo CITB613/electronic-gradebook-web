@@ -3,7 +3,6 @@ package bg.nbu.gradebook.configurations;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.Arrays;
-import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -78,6 +77,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // Our public endpoints
                 .antMatchers(HttpMethod.POST, "/api/login").permitAll()
                 .antMatchers(HttpMethod.POST,"/api/register").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/docs", "/api/swagger-ui/*", "/v3/api-docs/**")
+                .permitAll()
                 // Our private endpoints
                 .anyRequest().authenticated()
                 // Set up oauth2 resource server
