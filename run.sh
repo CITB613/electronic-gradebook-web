@@ -5,5 +5,8 @@ if ! docker info > /dev/null 2>&1; then
  	exit 1
 fi
 
-docker-compose up
+if ! (docker-compose ps | grep postgres | grep Up)  > /dev/null 2>&1; then
+	docker-compose up &
+fi
+
 mvnw spring-boot:run -DskipTests

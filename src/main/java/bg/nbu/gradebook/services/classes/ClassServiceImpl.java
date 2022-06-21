@@ -26,7 +26,7 @@ public class ClassServiceImpl implements ClassService {
     private final UserService userService;
     private final SubjectService subjectService;
     private final ClassRepository classRepository;
-    private Mapper modelMapper;
+    private final Mapper modelMapper;
 
     @Autowired
     public ClassServiceImpl(UserService userService, SubjectService subjectService, ClassRepository classRepository,
@@ -82,6 +82,8 @@ public class ClassServiceImpl implements ClassService {
 
         schoolClass.getSubjects()
                 .add(subject);
+        
+        classRepository.save(schoolClass);
     }
 
     @Override
@@ -94,6 +96,8 @@ public class ClassServiceImpl implements ClassService {
 
         schoolClass.getSubjects()
                 .remove(subject);
+        
+        classRepository.save(schoolClass);
     }
 
     @Override

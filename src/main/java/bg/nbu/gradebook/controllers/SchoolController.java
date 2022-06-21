@@ -19,8 +19,6 @@ import bg.nbu.gradebook.domain.entities.School;
 import bg.nbu.gradebook.domain.models.bindings.SchoolBindingModel;
 import bg.nbu.gradebook.services.schools.SchoolService;
 
-// FIXME Route permissions by role
-
 @RestController
 @RequestMapping("schools")
 public class SchoolController {

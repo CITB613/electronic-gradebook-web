@@ -54,8 +54,8 @@ public class SchoolServiceImpl implements SchoolService {
                 .orElseThrow();
 
         userService.promoteToPrincipal(user);
-        school.setPrincipal(modelMapper.map(user, User.class));
-        schoolRepository.saveAndFlush(school);
+        school.setPrincipal(user);
+        schoolRepository.save(school);
     }
 
     @Override

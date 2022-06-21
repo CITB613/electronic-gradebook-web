@@ -71,13 +71,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public void promoteToPrincipal(User user) {
         user.setAuthorities(singleton(new Role(ROLE_PRINCIPAL.getRole())));
-        userRepository.saveAndFlush(modelMapper.map(user, User.class));
+        userRepository.save(user);
     }
 
     @Override
     public User update(long userId, User userModel) {
-        final User user = userRepository.findById(userId)
-                .orElseThrow();
+        final User user = findById(userId).orElseThrow();
 
         if (isNotBlank(userModel.getFirstName())) {
             user.setFirstName(userModel.getFirstName());
@@ -92,10 +91,6 @@ public class UserServiceImpl implements UserService {
         }
 
         return userRepository.save(userModel);
-    }
-
-    public UserServiceModel mapToUserServiceModel(final User user) {
-        return modelMapper.map(user, UserServiceModel.class);
     }
 
     @Override
@@ -120,6 +115,6 @@ public class UserServiceImpl implements UserService {
                 .stream()
                 .map(Role::getAuthority)
                 .collect(toSet())
-                .contains(ROLE_PRINCIPAL.toString());
+                .contains(ROLE_PRINCIPAL.getRole());
     }
 }
