@@ -3,6 +3,7 @@ package bg.nbu.gradebook.services.classes;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -82,7 +83,7 @@ public class ClassServiceImpl implements ClassService {
 
         schoolClass.getSubjects()
                 .add(subject);
-        
+
         classRepository.save(schoolClass);
     }
 
@@ -96,7 +97,7 @@ public class ClassServiceImpl implements ClassService {
 
         schoolClass.getSubjects()
                 .remove(subject);
-        
+
         classRepository.save(schoolClass);
     }
 
@@ -124,5 +125,28 @@ public class ClassServiceImpl implements ClassService {
                 .orElseThrow();
 
         return enrollStudentInClass(studentId, newClass.getId());
+    }
+
+    @Override
+    public List<ClassServiceModel> findAll() {
+        return modelMapper.mapCollection(classRepository.findAll(), ClassServiceModel.class);
+    }
+
+    @Override
+    public void deleteById(long classId) {
+        classRepository.deleteById(classId);
+    }
+
+    @Override
+    public Set<User> findAllStudentsByClassId(long classId) {
+        return classRepository.findById(classId)
+                .orElseThrow()
+                .getStudents();
+    }
+
+    @Override
+    public Set<Subject> findAllSubjectsByClassId(long classId) {
+        return classRepository.findById(classId)
+                .orElseThrow().getSubjects();
     }
 }

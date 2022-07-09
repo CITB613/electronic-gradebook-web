@@ -21,7 +21,10 @@ public interface UserService {
 
     User update(long userId, User user);
 
-    void setRole(UserServiceModel userServiceModel, Roles admin);
 
     List<User> findAllPrincipals();
+
+    List<UserServiceModel> findAll();
+
+    void setRole(User user, Roles role);
 }

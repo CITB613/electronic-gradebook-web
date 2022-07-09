@@ -1,15 +1,15 @@
 package bg.nbu.gradebook.domain.models.bindings;
 
+import java.time.LocalDate;
+
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import javax.persistence.Column;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -35,4 +35,8 @@ public class CreateUserBindingModel {
 
     @NotNull
     private LocalDate birthDate;
+    
+    @NotNull
+    @NotEmpty
+    private String authority;
 }

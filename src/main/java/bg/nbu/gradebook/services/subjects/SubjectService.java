@@ -12,4 +12,6 @@ public interface SubjectService {
     SubjectServiceModel createSubject(SubjectServiceModel subjectServiceModel);
 
     Optional<Subject> findById(long subjectId);
+
+    void deleteById(long id);
 }

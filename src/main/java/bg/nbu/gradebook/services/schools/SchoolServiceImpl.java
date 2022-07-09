@@ -37,7 +37,7 @@ public class SchoolServiceImpl implements SchoolService {
             log.error(SCHOOL_ALREADY_REGISTED_ERROR_TEMPLATE, schoolBindingModel.getName(),
                     schoolBindingModel.getAddress());
 
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("School Already Present");
         }
 
         final User principal = userService.findById(schoolBindingModel.getPrincipalId()).orElseThrow();

@@ -49,6 +49,8 @@ public class UserServiceImpl implements UserService {
 
         User user = this.modelMapper.map(userData, User.class);
         user.setPassword(passwordEncoder.encode(userData.getPassword()));
+        
+       setRole(user, Roles.valueOf(userData.getAuthority()));
 
         return modelMapper.map(userRepository.save(user), UserServiceModel.class);
     }
@@ -90,16 +92,13 @@ public class UserServiceImpl implements UserService {
             user.setBirthDate(userModel.getBirthDate());
         }
 
-        return userRepository.save(userModel);
+        return userRepository.save(user);
     }
 
     @Override
-    public void setRole(UserServiceModel userServiceModel, Roles role) {
-        final User user = modelMapper.map(userServiceModel, User.class);
+    public void setRole(User user, Roles role) {
         final Role authority = modelMapper.map(roleService.findByAuthority(role.getRole()), Role.class);
         user.setAuthorities(singleton(authority));
-
-        userRepository.save(user);
     }
 
     @Override
@@ -117,4 +116,11 @@ public class UserServiceImpl implements UserService {
                 .collect(toSet())
                 .contains(ROLE_PRINCIPAL.getRole());
     }
+
+    @Override
+    public List<UserServiceModel> findAll() {
+        return modelMapper.mapCollection(userRepository.findAll(), UserServiceModel.class);
+
+    }
+
 }

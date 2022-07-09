@@ -9,8 +9,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import bg.nbu.gradebook.domain.entities.Roles;
+import bg.nbu.gradebook.domain.models.bindings.ClassBindingModel;
 import bg.nbu.gradebook.domain.models.bindings.CreateUserBindingModel;
 import bg.nbu.gradebook.domain.models.service.UserServiceModel;
+import bg.nbu.gradebook.services.classes.ClassService;
 import bg.nbu.gradebook.services.users.UserService;
 
 @SpringBootApplication
@@ -22,20 +25,27 @@ public class ElectronicGradebookApplication {
 
     @Bean
     @Autowired
-    ApplicationRunner initialize(UserService userService) {
+    ApplicationRunner initialize(UserService userService, ClassService classService) {
         return args -> {
-            if(!userService.findByUsername("admin").isEmpty()) {
+            if (!userService.findByUsername("admin")
+                    .isEmpty()) {
                 return;
             }
-            
-            UserServiceModel user = userService.register(CreateUserBindingModel.builder()
+
+            userService.register(CreateUserBindingModel.builder()
                     .username("admin")
                     .password("pass")
                     .firstName("adminFirstName")
                     .lastName("adminLastName")
                     .birthDate(now())
+                    .authority(ROLE_ADMIN.getRole())
                     .build());
-            userService.setRole(user, ROLE_ADMIN);
+            
+            
+            classService.create(ClassBindingModel.builder()
+                    .grade(1)
+                    .group("a")
+                    .build());
         };
     }
 }
