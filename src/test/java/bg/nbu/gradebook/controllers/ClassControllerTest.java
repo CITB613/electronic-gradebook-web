@@ -1,9 +1,12 @@
 package bg.nbu.gradebook.controllers;
 
+import static org.assertj.core.util.Lists.list;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.internal.util.collections.Sets.newSet;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,6 +15,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import bg.nbu.gradebook.domain.entities.Subject;
+import bg.nbu.gradebook.domain.entities.User;
 import bg.nbu.gradebook.domain.models.bindings.ClassBindingModel;
 import bg.nbu.gradebook.domain.models.service.ClassServiceModel;
 import bg.nbu.gradebook.services.classes.ClassService;
@@ -34,6 +39,12 @@ class ClassControllerTest {
 
     @Mock
     private ClassServiceModel classServiceModelMock;
+
+    @Mock
+    private User userMock;
+
+    @Mock
+    private Subject subjectMock;
 
     @BeforeEach
     void setUp() {
@@ -83,5 +94,33 @@ class ClassControllerTest {
                 equalTo(classServiceModelMock));
 
         verify(classServiceMock).updateStudentClass(STUDENT_ID, classBindingModelMock);
+    }
+
+    @Test
+    void testDelete() {
+        classController.delete(CLASS_ID);
+
+        verify(classServiceMock).deleteById(CLASS_ID);
+    }
+
+    @Test
+    void testFetchAll() {
+        when(classServiceMock.findAll()).thenReturn(list(classServiceModelMock));
+
+        assertThat(classController.fetchAll(), equalTo(list(classServiceModelMock)));
+    }
+
+    @Test
+    void testFetchAllStudentByClass() {
+        when(classServiceMock.findAllStudentsByClassId(CLASS_ID)).thenReturn(newSet(userMock));
+
+        assertThat(classController.fetchAllStudentByClass(CLASS_ID), equalTo(newSet(userMock)));
+    }
+
+    @Test
+    void testFetchAllSubjectsByClass() {
+        when(classServiceMock.findAllSubjectsByClassId(CLASS_ID)).thenReturn(newSet(subjectMock));
+
+        assertThat(classController.fetchAllSubjectsByClass(CLASS_ID), equalTo(newSet(subjectMock)));
     }
 }

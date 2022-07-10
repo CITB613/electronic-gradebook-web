@@ -4,6 +4,7 @@ import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,8 @@ import bg.nbu.gradebook.services.subjects.SubjectService;
 
 @ExtendWith(MockitoExtension.class)
 class SubjectControllerTest {
+    private static final int ID = 1;
+
     @InjectMocks
     private SubjectController subjectController;
 
@@ -37,5 +40,12 @@ class SubjectControllerTest {
         when(subjectServiceMock.findAll()).thenReturn(singletonList(subjectServiceModelMock));
 
         assertThat(subjectController.getAllSubjects(), contains(subjectServiceModelMock));
+    }
+
+    @Test
+    void testDelete() {
+        subjectController.delete(ID);
+
+        verify(subjectServiceMock).deleteById(ID);
     }
 }

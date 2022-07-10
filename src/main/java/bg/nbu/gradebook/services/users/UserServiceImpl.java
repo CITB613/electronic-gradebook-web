@@ -49,8 +49,8 @@ public class UserServiceImpl implements UserService {
 
         User user = this.modelMapper.map(userData, User.class);
         user.setPassword(passwordEncoder.encode(userData.getPassword()));
-        
-       setRole(user, Roles.valueOf(userData.getAuthority()));
+
+        setRole(user, Roles.valueOf(userData.getAuthority()));
 
         return modelMapper.map(userRepository.save(user), UserServiceModel.class);
     }

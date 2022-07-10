@@ -18,4 +18,6 @@ public class SubjectServiceModel extends BaseServiceModel {
     @NotNull
     @NotEmpty
     private String name;
+    
+    private long teacherId;
 }

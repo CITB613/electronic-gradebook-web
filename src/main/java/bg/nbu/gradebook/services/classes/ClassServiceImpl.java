@@ -147,6 +147,7 @@ public class ClassServiceImpl implements ClassService {
     @Override
     public Set<Subject> findAllSubjectsByClassId(long classId) {
         return classRepository.findById(classId)
-                .orElseThrow().getSubjects();
+                .orElseThrow()
+                .getSubjects();
     }
 }

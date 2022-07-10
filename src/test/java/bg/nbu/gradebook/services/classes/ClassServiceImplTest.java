@@ -4,13 +4,18 @@ import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
+import static org.assertj.core.util.Lists.list;
 import static org.assertj.core.util.Sets.set;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -108,6 +113,8 @@ class ClassServiceImplTest {
                 .thenReturn(classServiceModelMock);
         lenient().when(modelMapperMock.map(classBindingModelMock, Class.class))
                 .thenReturn(classMock);
+        lenient().when(modelMapperMock.mapCollection(anyList(), eq(ClassServiceModel.class)))
+                .thenReturn(list(classServiceModelMock));
 
         lenient().when(classMock.getStudents())
                 .thenReturn(studentsMock);
@@ -250,5 +257,43 @@ class ClassServiceImplTest {
         assertThat(classService.updateStudentClass(STUDENT_ID, classBindingModelMock), equalTo(classServiceModelMock));
 
         verify(classRepositoryMock, times(2)).save(classMock);
+    }
+
+    @Test
+    void testFindAll() {
+        assertThat(classService.findAll(), contains(classServiceModelMock));
+
+        verify(classRepositoryMock).findAll();
+    }
+
+    @Test
+    void testDeleteById() {
+        classService.deleteById(CLASS_ID);
+
+        verify(classRepositoryMock).deleteById(CLASS_ID);
+    }
+
+    @Test
+    void testFindAllStudentsByClassIdThrowsExceptionWhenClassNotFoundById() {
+        when(classRepositoryMock.findById(anyLong())).thenReturn(empty());
+
+        assertThrows(NoSuchElementException.class, () -> classService.findAllStudentsByClassId(CLASS_ID));
+    }
+
+    @Test
+    void testFindAllStudentsByClassId() {
+        assertThat(classService.findAllStudentsByClassId(CLASS_ID), equalTo(studentsMock));
+    }
+
+    @Test
+    void testFindAllSubjectsByClassIdThrowsExceptionWhenClassNotFoundById() {
+        when(classRepositoryMock.findById(anyLong())).thenReturn(empty());
+
+        assertThrows(NoSuchElementException.class, () -> classService.findAllSubjectsByClassId(CLASS_ID));
+    }
+
+    @Test
+    void testFindAllSubjectsByClassId() {
+        assertThat(classService.findAllSubjectsByClassId(CLASS_ID), equalTo(subjectsMock));
     }
 }

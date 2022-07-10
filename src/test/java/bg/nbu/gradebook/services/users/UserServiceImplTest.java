@@ -1,5 +1,6 @@
 package bg.nbu.gradebook.services.users;
 
+import static bg.nbu.gradebook.domain.entities.Roles.ROLE_ADMIN;
 import static bg.nbu.gradebook.domain.entities.Roles.ROLE_PRINCIPAL;
 import static java.time.LocalDate.now;
 import static java.util.Collections.singleton;
@@ -8,11 +9,13 @@ import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.assertj.core.util.Lists.list;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -104,6 +107,8 @@ class UserServiceImplTest {
                 .thenReturn(userMock);
         lenient().when(modelMapperMock.map(userMock, UserServiceModel.class))
                 .thenReturn(userServiceModelMock);
+        lenient().when(modelMapperMock.mapCollection(any(), eq(UserServiceModel.class)))
+                .thenReturn(list(userServiceModelMock));
 
         lenient().when(userRepositoryMock.save(userMock))
                 .thenReturn(userMock);
@@ -112,6 +117,8 @@ class UserServiceImplTest {
                 .thenReturn(USERNAME);
         lenient().when(createUserBindingModelMock.getPassword())
                 .thenReturn(PASSWORD);
+        lenient().when(createUserBindingModelMock.getAuthority())
+                .thenReturn(ROLE_ADMIN.getRole());
     }
 
     @Test
@@ -178,10 +185,9 @@ class UserServiceImplTest {
 
     @Test
     void testSetRole() {
-        userService.setRole(userServiceModelMock, ROLE_PRINCIPAL);
+        userService.setRole(userMock, ROLE_PRINCIPAL);
 
         verify(userMock).setAuthorities(singleton(roleMock));
-        verify(userRepositoryMock).save(userMock);
     }
 
     @Test
@@ -189,5 +195,10 @@ class UserServiceImplTest {
         when(roleMock.getAuthority()).thenReturn(ROLE_PRINCIPAL.getRole());
 
         assertThat(userService.findAllPrincipals(), equalTo(singletonList(userMock)));
+    }
+
+    @Test
+    void testFindAll() {
+        assertThat(userService.findAll(), contains(userServiceModelMock));
     }
 }
