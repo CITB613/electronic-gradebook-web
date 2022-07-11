@@ -1,10 +1,12 @@
 package bg.nbu.gradebook.controllers;
 
 import static java.util.Collections.singletonList;
+import static org.assertj.core.util.Lists.list;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -63,5 +65,19 @@ class UserControllerTest {
     @Test
     void testFindAllPrincipals() {
         assertThat(userController.findAllPrincipals(), contains(userMock));
+    }
+
+    @Test
+    void testFindAllTeachers() {
+        when(userServiceMock.findAllTeachers()).thenReturn(list(userMock));
+
+        assertThat(userController.findAllTeachers(), contains(userMock));
+    }
+
+    @Test
+    void testFindAllStudents() {
+        when(userServiceMock.findAllStudents()).thenReturn(list(userMock));
+
+        assertThat(userController.findAllStudents(), contains(userMock));
     }
 }

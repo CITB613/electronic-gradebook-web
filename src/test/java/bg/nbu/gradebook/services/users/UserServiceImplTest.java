@@ -2,6 +2,8 @@ package bg.nbu.gradebook.services.users;
 
 import static bg.nbu.gradebook.domain.entities.Roles.ROLE_ADMIN;
 import static bg.nbu.gradebook.domain.entities.Roles.ROLE_PRINCIPAL;
+import static bg.nbu.gradebook.domain.entities.Roles.ROLE_STUDENT;
+import static bg.nbu.gradebook.domain.entities.Roles.ROLE_TEACHER;
 import static java.time.LocalDate.now;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
@@ -35,6 +37,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import bg.nbu.gradebook.commons.utils.Mapper;
 import bg.nbu.gradebook.domain.entities.Role;
+import bg.nbu.gradebook.domain.entities.Roles;
 import bg.nbu.gradebook.domain.entities.User;
 import bg.nbu.gradebook.domain.models.bindings.CreateUserBindingModel;
 import bg.nbu.gradebook.domain.models.service.RoleServiceModel;
@@ -200,5 +203,19 @@ class UserServiceImplTest {
     @Test
     void testFindAll() {
         assertThat(userService.findAll(), contains(userServiceModelMock));
+    }
+
+    @Test
+    void testFindAllTeachers() {
+        when(roleMock.getAuthority()).thenReturn(ROLE_TEACHER.getRole());
+
+        assertThat(userService.findAllTeachers(), equalTo(singletonList(userMock)));
+    }
+    
+    @Test
+    void testFindAllStudents() {
+        when(roleMock.getAuthority()).thenReturn(ROLE_STUDENT.getRole());
+
+        assertThat(userService.findAllStudents(), equalTo(singletonList(userMock)));
     }
 }

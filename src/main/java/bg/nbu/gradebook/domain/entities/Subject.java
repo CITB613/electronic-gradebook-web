@@ -22,7 +22,7 @@ public class Subject extends BaseEntity {
     @Column(name = "name", unique = true, nullable = false)
     private String name;
 
-    @OneToOne
+    @OneToOne()
     @JoinColumn(name = "teacher_id")
     private User teacher;
 }

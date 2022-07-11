@@ -1,6 +1,8 @@
 package bg.nbu.gradebook.services.users;
 
 import static bg.nbu.gradebook.domain.entities.Roles.ROLE_PRINCIPAL;
+import static bg.nbu.gradebook.domain.entities.Roles.ROLE_STUDENT;
+import static bg.nbu.gradebook.domain.entities.Roles.ROLE_TEACHER;
 import static java.util.Collections.singleton;
 import static java.util.stream.Collectors.toSet;
 import static java.util.stream.Collectors.toUnmodifiableList;
@@ -105,22 +107,38 @@ public class UserServiceImpl implements UserService {
     public List<User> findAllPrincipals() {
         return userRepository.findAll()
                 .stream()
-                .filter(this::filterByPrincipalRole)
+                .filter(user -> filterByPrincipalRole(user, ROLE_PRINCIPAL.getRole()))
                 .collect(toUnmodifiableList());
-    }
-
-    private boolean filterByPrincipalRole(User user) {
-        return user.getAuthorities()
-                .stream()
-                .map(Role::getAuthority)
-                .collect(toSet())
-                .contains(ROLE_PRINCIPAL.getRole());
     }
 
     @Override
     public List<UserServiceModel> findAll() {
         return modelMapper.mapCollection(userRepository.findAll(), UserServiceModel.class);
 
+    }
+
+    @Override
+    public List<User> findAllTeachers() {
+        return userRepository.findAll()
+                .stream()
+                .filter(user -> filterByPrincipalRole(user, ROLE_TEACHER.getRole()))
+                .collect(toUnmodifiableList());
+    }
+
+    @Override
+    public List<User> findAllStudents() {
+        return userRepository.findAll()
+                .stream()
+                .filter(user -> filterByPrincipalRole(user, ROLE_STUDENT.getRole()))
+                .collect(toUnmodifiableList());
+    }
+
+    private boolean filterByPrincipalRole(User user, String role) {
+        return user.getAuthorities()
+                .stream()
+                .map(Role::getAuthority)
+                .collect(toSet())
+                .contains(role);
     }
 
 }

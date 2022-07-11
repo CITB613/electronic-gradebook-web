@@ -27,7 +27,7 @@ public class Class extends BaseEntity {
     @ManyToMany(fetch = EAGER)
     private Set<Subject> subjects = emptySet();
 
-    @OneToMany(cascade = ALL, orphanRemoval = false)
+    @OneToMany(cascade = ALL, orphanRemoval = false, fetch = EAGER)
     private Set<User> students = emptySet();
 
     @Range(min = 1, max = 12)

@@ -4,8 +4,6 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,7 +38,7 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
-    public void updatePersonalDetails(@PathVariable long userId, @RequestBody @Valid UserBindingModel userBindingModel) {
+    public void updatePersonalDetails(@PathVariable long userId, @RequestBody UserBindingModel userBindingModel) {
         userService.update(userId, mapper.map(userBindingModel, User.class));
     }
 
@@ -53,5 +51,15 @@ public class UserController {
     @GetMapping("/principals")
     public List<User> findAllPrincipals() {
         return userService.findAllPrincipals();
+    }
+
+    @GetMapping("/teachers")
+    public List<User> findAllTeachers() {
+        return userService.findAllTeachers();
+    }
+
+    @GetMapping("/students")
+    public List<User> findAllStudents() {
+        return userService.findAllStudents();
     }
 }

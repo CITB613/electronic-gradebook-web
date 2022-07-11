@@ -27,4 +27,8 @@ public interface UserService {
     List<UserServiceModel> findAll();
 
     void setRole(User user, Roles role);
+
+    List<User> findAllTeachers();
+
+    List<User> findAllStudents();
 }
